@@ -1,0 +1,13 @@
+{
+  "type": "love_note",
+  "timestamp": 1764185862,
+  "iso_time": "2025-11-26T14:37:42.137161",
+  "actor": "YesPen_001",
+  "action": "YES",
+  "context": {
+    "session_id": "demo_workshop_01",
+    "role": "investor_agreement",
+    "terms_hash": "sha256_of_term_sheet_v1"
+  },
+  "machine_signature": "pending_crypto_layer"
+}

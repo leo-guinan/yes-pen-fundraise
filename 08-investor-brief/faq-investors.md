@@ -44,17 +44,26 @@ No off-chain confusion.
 
 ### How do I invest?
 
-Decide "Yes" via email or DMs.
+**Step 1:** Press the YesPen (or commit via email/DMs)
 
-You'll receive:
+**Step 2:** TRUST computes your terms based on:
+- Current base valuation
+- Your commitment size
+- Time since raise start
 
-- investment docs
-- your Investor Number
-- your engraved Yes Pen information
+**Step 3:** LOVE records your commitment with:
+- Timestamp
+- Locked effective valuation
+- 7-day TTL deadline
 
-Send funds
+**Step 4:** Wire funds within 7 days
 
-Your spot is locked in the Yes Ledger
+**Step 5:** Your spot is confirmed, YesPen engraved, investor number assigned
+
+**If you don't wire within 7 days:**
+- Your commitment expires
+- You go to end of queue
+- You must commit again (at worse terms due to time decay)
 
 Everything is fast, clean, and timestamped.
 
@@ -72,15 +81,24 @@ For this raise, see the Current Status file.
 
 ### What's the valuation?
 
-Listed in:
+The valuation cap is **time-indexed** — it changes based on when you commit.
 
-`06-traction-metrics/current-status.md`
+**Current base valuation:** Listed in `06-traction-metrics/current-status.md`
 
-It is fixed.
+**How it works:**
+- Base valuation starts at a set cap (e.g., $5M)
+- It decays over time (e.g., 2% per day) as information spreads
+- Your effective valuation also depends on:
+  - **When you commit** (earlier = better terms)
+  - **How much you commit** (larger = better terms)
 
-No negotiation.
+**Example:**
+- Day 2, $100k commitment → Effective cap ~$3.67M
+- Day 20, $10k commitment → Effective cap ~$3.40M
 
-No back-and-forth.
+**No negotiation. No back-and-forth.**
+
+The formulas are public. TRUST calculates your terms. LOVE records them.
 
 If the valuation doesn't feel fair → simply choose No.
 
@@ -103,14 +121,27 @@ The raise is about mechanism creation, not burn-through operations.
 
 ### What are the terms?
 
-- Standard SAFE or SAFE-like structure
+We raise on a **SAFE-T** — a Time-Indexed SAFE powered by TRUST and recorded on LOVE.
+
+**SAFE-T Structure:**
+- Standard SAFE with time-indexed valuation cap
 - No board
 - No control provisions
 - No hidden clauses
 - No special conditions
 - No negotiation
 
-Terms are public so all investors get the same deal.
+**How Pricing Works:**
+- **TRUST** (the pricing engine) calculates your effective valuation based on:
+  - When you commit (earlier = better terms)
+  - How much you commit (larger = better terms)
+  - Current base valuation (decays over time)
+- **LOVE** (the ledger) records your commitment timestamp and terms
+- You have 7 days to wire funds or lose your spot
+
+**Terms are formulaic, public, and non-negotiable.**
+
+All investors see the same formulas. Your terms depend on timing and commitment size.
 
 ### How do scouts get compensated?
 
@@ -140,32 +171,38 @@ If this happens:
 
 Yes — transparency is part of Conscious Economics.
 
-The Yes Ledger displays:
+**LOVE (Ledger of Verifiable Events)** displays:
 
 - investor number
-- timestamp
-- multiplier tier
+- commitment timestamp
+- commitment size
+- effective valuation
+- queue position
+- status (awaiting wire / confirmed / expired)
 - (optional) name or pseudonym
 
 Some investors prefer to remain anonymous; that is supported.
+
+All commitments are public, timestamped, and verifiable.
 
 ### How is this different from other raises?
 
 This raise:
 
-- has no meetings
-- uses open, crowdsourced diligence
-- treats investor time as sacred
-- treats founder time as sacred
-- removes ambiguity
-- provides unmatched context
-- doesn't rely on status or warm intros
-- rewards early conviction structurally
-- makes belief a collectible, physical artifact
+- **SAFE-T structure** — Time-indexed pricing, no negotiation
+- **TRUST engine** — Public formulas, deterministic terms
+- **LOVE ledger** — All commitments recorded, verifiable, transparent
+- **No meetings** — Yes/No protocol, no back-and-forth
+- **Open diligence** — Crowdsourced, public, transparent
+- **Time-respecting** — Protects founder and investor time
+- **Rewards conviction** — Early + large commitments get better terms
+- **Physical artifact** — YesPen engraving makes belief tangible
 
-This is not a pitch.
+**This is not a pitch.**
 
-This is a mechanism.
+**This is a mechanism.**
+
+**Pricing by time. Memory by design. Commitment without negotiation.**
 
 ---
 

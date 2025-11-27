@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAFE-T — Time-Indexed SAFE</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: #000000;
+            color: #ffffff;
+            overflow-x: hidden;
+            overflow-y: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* THE TRUTH PANEL - Top third */
+        .truth-panel {
+            height: calc(32vh - 1px);
+            border-bottom: 1px solid #333333;
+            padding: 30px 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .truth-header {
+            font-size: 14px;
+            color: #888888;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+        }
+
+        .truth-pricing-model {
+            font-size: 11px;
+            color: #666666;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .truth-valuation-label {
+            font-size: 11px;
+            color: #666666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .truth-valuation {
+            font-size: 64px;
+            font-weight: normal;
+            letter-spacing: -2px;
+            margin-bottom: 20px;
+        }
+
+        .truth-meta {
+            display: flex;
+            gap: 60px;
+            font-size: 16px;
+            color: #cccccc;
+        }
+
+        .truth-meta-item {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .truth-meta-label {
+            font-size: 12px;
+            color: #666666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .truth-meta-value {
+            font-size: 20px;
+            color: #ffffff;
+            font-weight: normal;
+        }
+
+        /* MIDDLE SECTION - Terms and Ledger side by side */
+        .middle-section {
+            height: calc(34vh - 1px);
+            display: flex;
+            border-bottom: 1px solid #333333;
+            overflow: hidden;
+        }
+
+        /* THE TERMS PANEL - Left middle */
+        .terms-panel {
+            width: 50%;
+            border-right: 1px solid #333333;
+            padding: 30px 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow-y: auto;
+        }
+
+        .terms-section {
+            margin-bottom: 30px;
+        }
+
+        .terms-label {
+            font-size: 12px;
+            color: #666666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        .terms-input {
+            background: transparent;
+            border: 1px solid #333333;
+            color: #ffffff;
+            font-family: 'Courier New', monospace;
+            font-size: 24px;
+            padding: 12px 16px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .terms-input:focus {
+            outline: none;
+            border-color: #555555;
+        }
+
+        .terms-derived {
+            margin-top: 20px;
+        }
+
+        .terms-derived-item {
+            margin-bottom: 16px;
+        }
+
+        .terms-derived-label {
+            font-size: 12px;
+            color: #666666;
+            margin-bottom: 4px;
+        }
+
+        .terms-derived-value {
+            font-size: 20px;
+            color: #ffffff;
+        }
+
+        .terms-ttl {
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 1px solid #333333;
+        }
+
+        /* THE LIVE LEDGER PANEL - Right middle */
+        .ledger-panel {
+            width: 50%;
+            padding: 30px 60px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .ledger-header {
+            font-size: 14px;
+            color: #888888;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+        }
+
+        .ledger-entries {
+            flex: 1;
+            overflow-y: auto;
+            font-size: 14px;
+        }
+
+        .ledger-entry {
+            display: grid;
+            grid-template-columns: 100px 120px 120px 1fr;
+            gap: 20px;
+            padding: 12px 0;
+            border-bottom: 1px solid #222222;
+            font-family: 'Courier New', monospace;
+        }
+
+        .ledger-time {
+            color: #666666;
+        }
+
+        .ledger-actor {
+            color: #888888;
+        }
+
+        .ledger-amount {
+            color: #ffffff;
+        }
+
+        .ledger-status {
+            color: #888888;
+            text-transform: uppercase;
+            font-size: 12px;
+        }
+
+        .ledger-status.confirmed {
+            color: #00ff00;
+        }
+
+        .ledger-status.expired {
+            color: #ff0000;
+        }
+
+        .ledger-status.locked {
+            color: #ffff00;
+        }
+
+        /* THE DECISION ZONE - Bottom third */
+        .decision-zone {
+            height: calc(34vh - 40px); /* Account for principle banner */
+            padding: 30px 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow-y: auto;
+        }
+
+        .decision-ready {
+            text-align: center;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .decision-header {
+            font-size: 14px;
+            color: #888888;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
+
+        .decision-context {
+            font-size: 12px;
+            color: #666666;
+            margin-bottom: 20px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .decision-terms {
+            font-size: 14px;
+            color: #cccccc;
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
+
+        .decision-button {
+            background: transparent;
+            border: 2px solid #ffffff;
+            color: #ffffff;
+            font-family: 'Courier New', monospace;
+            font-size: 22px;
+            padding: 16px 50px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            transition: all 0.1s;
+        }
+
+        .decision-button:hover {
+            background: #ffffff;
+            color: #000000;
+        }
+
+        .decision-button:active {
+            transform: scale(0.98);
+        }
+
+        .decision-committed {
+            display: none;
+            text-align: center;
+        }
+
+        .decision-committed.active {
+            display: block;
+        }
+
+        .commit-success {
+            font-size: 48px;
+            margin-bottom: 30px;
+        }
+
+        .commit-details {
+            font-size: 18px;
+            color: #cccccc;
+            margin-bottom: 20px;
+            line-height: 2;
+        }
+
+        .commit-love-note {
+            background: #111111;
+            border: 1px solid #333333;
+            padding: 20px;
+            margin: 30px 0;
+            font-size: 12px;
+            color: #888888;
+            text-align: left;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            overflow-x: auto;
+        }
+
+        .commit-final {
+            font-size: 16px;
+            color: #ffffff;
+            margin-top: 30px;
+            letter-spacing: 1px;
+        }
+
+        /* Principle banner */
+        .principle-banner {
+            height: 40px;
+            padding: 12px 60px;
+            background: #000000;
+            border-top: 1px solid #333333;
+            font-size: 10px;
+            color: #666666;
+            text-align: center;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #000000;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #333333;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #444444;
+        }
+    </style>
+</head>
+<body>
+    <!-- THE TRUTH PANEL -->
+    <div class="truth-panel">
+        <div class="truth-header">
+            SAFE-T — Time-Indexed SAFE<br>
+            Powered by TRUST<br>
+            Recorded on LOVE
+        </div>
+        <div class="truth-pricing-model">
+            PRICING MODEL: TRUST v1.0
+        </div>
+        <div class="truth-valuation-label">CURRENT EFFECTIVE CAP</div>
+        <div class="truth-valuation" id="current-valuation">
+            $4,312,000
+        </div>
+        <div class="truth-meta">
+            <div class="truth-meta-item">
+                <div class="truth-meta-label">RAISE TIME ELAPSED</div>
+                <div class="truth-meta-value" id="time-since">14 DAYS · 03 HOURS · 12 MINUTES</div>
+            </div>
+            <div class="truth-meta-item">
+                <div class="truth-meta-label">NEXT PRICE CHANGE IN</div>
+                <div class="truth-meta-value" id="next-change">01:47:22</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MIDDLE SECTION -->
+    <div class="middle-section">
+        <!-- THE TERMS PANEL -->
+        <div class="terms-panel">
+            <div>
+                <div class="terms-section">
+                    <div class="terms-label">Committed amount:</div>
+                    <input type="text" class="terms-input" id="commitment-amount" value="$50,000" oninput="updateTerms()">
+                </div>
+                <div class="terms-section">
+                    <div class="terms-label">Funding round:</div>
+                    <div class="terms-derived-value" id="funding-round">SAFE-T (round_2025_01)</div>
+                </div>
+            </div>
+            <div class="terms-derived">
+                <div class="terms-derived-item">
+                    <div class="terms-derived-label">LOCKED EFFECTIVE VALUATION</div>
+                    <div class="terms-derived-value" id="locked-valuation">$3,972,000</div>
+                </div>
+                <div class="terms-derived-item">
+                    <div class="terms-derived-label">OWNERSHIP (AT THIS MOMENT)</div>
+                    <div class="terms-derived-value" id="implied-ownership">1.26%</div>
+                </div>
+                <div class="terms-derived-item">
+                    <div class="terms-derived-label">DISCOUNTS APPLIED</div>
+                    <div class="terms-derived-value" id="discounts">Size tier: 10%</div>
+                </div>
+            </div>
+            <div class="terms-ttl">
+                <div class="terms-derived-label">TTL WINDOW</div>
+                <div class="terms-derived-value" id="ttl-days">7 DAYS TO WIRE</div>
+                <div class="terms-derived-label" style="margin-top: 12px;">EXPIRES AT:</div>
+                <div class="terms-derived-value" id="ttl-deadline">Dec 3rd · 14:32 EST</div>
+            </div>
+        </div>
+
+        <!-- THE LIVE LEDGER PANEL -->
+        <div class="ledger-panel">
+            <div class="ledger-header">LIVE LOVE LEDGER</div>
+            <div class="ledger-entries" id="ledger-entries">
+                <!-- Entries will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- THE DECISION ZONE -->
+    <div class="decision-zone">
+        <div class="decision-ready" id="decision-ready">
+            <div class="decision-header">SAFE-T COMMITMENT READY</div>
+            <div class="decision-context">
+                CURRENT CONTEXT HASH:<br>
+                <span id="context-hash">5c9a2e…8f31</span>
+            </div>
+            <div class="decision-terms" id="decision-terms">
+                TERMS SNAPSHOT:<br>
+                $50,000 @ $3.97M cap<br>
+                1.26% ownership<br>
+                TTL: Dec 3rd, 14:32 EST
+            </div>
+            <button class="decision-button" onclick="commit()">PRESS YES TO LOCK TERMS</button>
+        </div>
+
+        <div class="decision-committed" id="decision-committed">
+            <div class="commit-success">✅ COMMITMENT RECORDED</div>
+            <div class="commit-details" id="commit-details">
+                LOCKED:<br>
+                Investment: $50,000<br>
+                Valuation: $3,972,000<br>
+                Ownership: 1.26%<br>
+                TTL: Dec 3rd · 14:32 EST
+            </div>
+            <div class="commit-love-note" id="love-note-display"></div>
+            <div class="commit-final">TERMS LOCKED<br>WIRE TO CONFIRM<br>SYSTEM WILL MOVE WITHOUT YOU<br>REGARDLESS</div>
+        </div>
+    </div>
+
+    <!-- PRINCIPLE BANNER -->
+    <div class="principle-banner">
+        Time sets the price. Action sets the position.
+    </div>
+
+    <script>
+        let commitmentAmount = 50000;
+        let currentTerms = null;
+
+        // Update Truth Panel
+        async function updateTruth() {
+            try {
+                const response = await fetch('/api/truth');
+                const data = await response.json();
+                
+                document.getElementById('current-valuation').textContent = 
+                    `$${data.current_valuation.toLocaleString()}`;
+                document.getElementById('time-since').textContent = data.time_since_opened;
+                document.getElementById('next-change').textContent = data.next_price_change_in;
+            } catch (error) {
+                console.error('Error updating truth:', error);
+            }
+        }
+
+        // Update Terms Panel
+        async function updateTerms() {
+            const input = document.getElementById('commitment-amount');
+            let value = input.value.replace(/[^0-9]/g, '');
+            if (value) {
+                commitmentAmount = parseInt(value);
+                input.value = `$${commitmentAmount.toLocaleString()}`;
+            } else {
+                commitmentAmount = 50000;
+                input.value = '$50,000';
+            }
+
+            try {
+                const response = await fetch(`/api/terms?amount=${commitmentAmount}`);
+                const data = await response.json();
+                currentTerms = data;
+
+                document.getElementById('locked-valuation').textContent = 
+                    `$${data.locked_effective_valuation.toLocaleString()}`;
+                document.getElementById('implied-ownership').textContent = 
+                    `${data.implied_ownership.toFixed(2)}%`;
+                document.getElementById('discounts').innerHTML = 
+                    `Size tier: ${data.size_discount.toFixed(0)}%`;
+                document.getElementById('ttl-deadline').textContent = data.ttl_deadline;
+
+                // Update decision zone
+                document.getElementById('decision-terms').innerHTML = 
+                    `TERMS SNAPSHOT:<br>` +
+                    `$${commitmentAmount.toLocaleString()} @ $${(data.locked_effective_valuation / 1000000).toFixed(2)}M cap<br>` +
+                    `${data.implied_ownership.toFixed(2)}% ownership<br>` +
+                    `TTL: ${data.ttl_deadline}`;
+                
+                // Update context hash
+                if (data.context_hash) {
+                    document.getElementById('context-hash').textContent = `${data.context_hash}…`;
+                }
+            } catch (error) {
+                console.error('Error updating terms:', error);
+            }
+        }
+
+        // Update Ledger Panel
+        async function updateLedger() {
+            try {
+                const response = await fetch('/api/ledger');
+                const data = await response.json();
+                
+                const entriesDiv = document.getElementById('ledger-entries');
+                entriesDiv.innerHTML = '';
+
+                if (data.entries.length === 0) {
+                    entriesDiv.innerHTML = '<div style="color: #666; padding: 20px;">No commitments yet.</div>';
+                    return;
+                }
+
+                data.entries.forEach(entry => {
+                    const entryDiv = document.createElement('div');
+                    entryDiv.className = 'ledger-entry';
+                    
+                    // Determine status class
+                    let statusClass = '';
+                    if (entry.status.includes('CONFIRMED')) {
+                        statusClass = 'confirmed';
+                    } else if (entry.status.includes('EXPIRED')) {
+                        statusClass = 'expired';
+                    } else if (entry.status.includes('LOCKED')) {
+                        statusClass = 'locked';
+                    }
+                    
+                    entryDiv.innerHTML = `
+                        <div class="ledger-time">[${entry.time}]</div>
+                        <div class="ledger-actor">${entry.actor}</div>
+                        <div class="ledger-amount">${entry.amount}</div>
+                        <div class="ledger-status ${statusClass}">${entry.status}</div>
+                    `;
+                    entriesDiv.appendChild(entryDiv);
+                });
+            } catch (error) {
+                console.error('Error updating ledger:', error);
+            }
+        }
+
+        // Commit function
+        async function commit() {
+            if (!currentTerms) {
+                await updateTerms();
+            }
+
+            try {
+                const response = await fetch('/api/commit', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        amount: commitmentAmount
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Hide ready, show committed
+                    document.getElementById('decision-ready').style.display = 'none';
+                    document.getElementById('decision-committed').classList.add('active');
+
+                    // Update commit details
+                    document.getElementById('commit-details').innerHTML = 
+                        `LOCKED:<br>` +
+                        `Investment: $${data.commitment.investment.toLocaleString()}<br>` +
+                        `Valuation: $${data.commitment.valuation.toLocaleString()}<br>` +
+                        `Ownership: ${data.commitment.ownership.toFixed(2)}%<br>` +
+                        `TTL: ${data.commitment.ttl_deadline}`;
+
+                    // Show LOVE note
+                    document.getElementById('love-note-display').textContent = 
+                        JSON.stringify(data.love_note, null, 2);
+
+                    // Update ledger immediately
+                    await updateLedger();
+                }
+            } catch (error) {
+                console.error('Error committing:', error);
+                alert('Error recording commitment. Please try again.');
+            }
+        }
+
+        // Initialize and update every second
+        updateTruth();
+        updateTerms();
+        updateLedger();
+
+        setInterval(() => {
+            updateTruth();
+            updateLedger();
+        }, 1000);
+
+        // Update terms when amount changes (debounced)
+        let termsTimeout;
+        document.getElementById('commitment-amount').addEventListener('input', () => {
+            clearTimeout(termsTimeout);
+            termsTimeout = setTimeout(updateTerms, 300);
+        });
+    </script>
+</body>
+</html>
+

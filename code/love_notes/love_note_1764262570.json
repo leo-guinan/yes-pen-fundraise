@@ -1,0 +1,11 @@
+{
+  "type": "investment_commitment",
+  "actor": "YesPen_002",
+  "timestamp": 1764262570,
+  "iso_time": "2025-11-27T11:56:10.918899",
+  "amount": 50000.0,
+  "effective_valuation": 3055500.0,
+  "equity": "1.64%",
+  "ttl_deadline": "2025-12-04T11:56:10.918899",
+  "status": "awaiting_wire"
+}

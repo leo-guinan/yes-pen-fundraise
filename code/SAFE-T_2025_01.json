@@ -1,0 +1,37 @@
+{
+  "round_id": "SAFE-T_2025_01",
+  "instrument": "SAFE-T (Time-Indexed SAFE)",
+  "pricing_engine": "TRUST v1.0",
+  "ledger": "LOVE",
+  "founder": "Leo Guinan",
+  "entity": "Idea Nexus Ventures, Inc.",
+  "jurisdiction": "Delaware, USA",
+  "start_time_utc": "2025-11-27T18:00:00Z",
+  "initial_valuation_cap": 4000000,
+  "daily_decay_rate": 0.005,
+  "minimum_cap_floor": 3200000,
+  "wire_ttl_days": 7,
+  "commitment_tiers": {
+    "10000-24999": 0.00,
+    "25000-49999": 0.05,
+    "50000-99999": 0.10,
+    "100000+": 0.15
+  },
+  "valuation_formula": "Cap_today = max(initial_valuation_cap × (1 - daily_decay_rate × days_elapsed), minimum_cap_floor)",
+  "terms_locked_on_event": "YesPen press",
+  "ttl_enforced": true,
+  "extensions_allowed": false,
+  "negotiation": "disabled",
+  "ledger_fields": [
+    "timestamp",
+    "actor",
+    "commitment_amount",
+    "effective_valuation",
+    "equity_percentage",
+    "ttl_deadline",
+    "status",
+    "context_hash"
+  ],
+  "status": "OPEN"
+}
+
